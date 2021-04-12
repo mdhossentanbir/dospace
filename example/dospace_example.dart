@@ -34,15 +34,15 @@ main() async {
 
   // Basic pre-signed upload
   {
-    String preSignUrl = bucket.preSignUpload('README.md');
+    String? preSignUrl = bucket.preSignUpload('README.md');
     print('upload url: ${preSignUrl}');
     var httpClient = new http.Client();
-    var httpRequest = new http.Request('PUT', Uri.parse(preSignUrl));
+    var httpRequest = new http.Request('PUT', Uri.parse(preSignUrl!));
     http.StreamedResponse httpResponse = await httpClient.send(httpRequest);
     String body = await utf8.decodeStream(httpResponse.stream);
     print('${httpResponse.statusCode} ${httpResponse.reasonPhrase}');
     print(body);
-    await httpClient.close();
+    await httpClient.close;
   }
 
   // Pre-signed upload with specific payload
@@ -50,16 +50,16 @@ main() async {
     var input = new File('README.md');
     int contentLength = await input.length();
     Digest contentSha256 = await sha256.bind(input.openRead()).first;
-    String preSignUrl = bucket.preSignUpload('README.md',
+    String? preSignUrl = bucket.preSignUpload('README.md',
         contentLength: contentLength, contentSha256: contentSha256);
     print('strict upload url: ${preSignUrl}');
     var httpClient = new http.Client();
-    var httpRequest = new http.Request('PUT', Uri.parse(preSignUrl));
+    var httpRequest = new http.Request('PUT', Uri.parse(preSignUrl!));
     http.StreamedResponse httpResponse = await httpClient.send(httpRequest);
     String body = await utf8.decodeStream(httpResponse.stream);
     print('${httpResponse.statusCode} ${httpResponse.reasonPhrase}');
     print(body);
-    await httpClient.close();
+    await httpClient.close;
   }
 
   print('done');
